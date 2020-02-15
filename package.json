@@ -5,7 +5,7 @@
   "main": "src/server.js",
   "scripts": {
     "serve": "nodemon src/server.js",
-    "lint": "eslint --ignore-path .gitignore ."
+    "lint": "eslint --ignore-path .gitignore . --fix"
   },
   "author": "Jrb <jrb.youssef@gmail.com>",
   "license": "ISC",
