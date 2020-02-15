@@ -30,6 +30,6 @@ User.init({
   uniqueKeys: {
     users_unique: { fields: ['email'] }
   }
-});
+})
 
 module.exports = User

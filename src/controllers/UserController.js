@@ -10,7 +10,7 @@ const check_no_empty = require('../utils/inputs/check_no_empty')
  * @param res
  */
 const findUser = async (req, res) => {
-  const id = req.params.id;
+  const id = req.params.id
 
   let [user, error] = await Handler(User.findByPk(id))
 
@@ -34,7 +34,7 @@ exports.index = async (req, res) => {
   if (error) return res.status(500).json({ error })
 
   return res.status(200).json(users)
-};
+}
 
 /**
  * Show User
@@ -103,7 +103,7 @@ exports.update = async function (req, res) {
       const errors = []
       error.errors.forEach(error => {
         errors.push(error.message)
-      });
+      })
       res.status(500).json(errors)
     })
 }
@@ -119,7 +119,7 @@ exports.update = async function (req, res) {
  */
 exports.delete = async function (req, res) {
 
-  const user = await findUser(req, res);
+  const user = await findUser(req, res)
 
   const [deleted, error] = await Handler(user.destroy())
 
@@ -127,7 +127,7 @@ exports.delete = async function (req, res) {
     const errors = []
     error.errors.forEach(error => {
       errors.push(error.message)
-    });
+    })
     res.status(500).json(errors)
   }
 
