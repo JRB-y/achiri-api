@@ -1,10 +1,27 @@
-const db = require('../db')
 const User = require('../models/User')
 const Handler = require('../utils/Handler')
 const check_no_empty = require('../utils/inputs/check_no_empty')
 
 /**
- * List of all users
+ * Find a user.
+ * We use this function in multiple places (show, delete, update)
+ * 
+ * @param {id} req id of the user to find
+ * @param res
+ */
+const findUser = async (req, res) => {
+  const id = req.params.id;
+
+  let [user, error] = await Handler(User.findByPk(id))
+
+  if (error) return res.status(500).json(error)
+  if (!user) return res.status(404).json({ error: `couldn't find user with id = ${id} !` })
+
+  return user
+}
+
+/**
+ * List of all users.
  * 
  * @method GET
  * @param id Number
@@ -20,19 +37,16 @@ exports.index = async (req, res) => {
 };
 
 /**
- * get: Show User
+ * Show User
  * 
  * @method GET
  * @param id Number
  */
-exports.show = async function (req, res) {
-  const id = req.params.id;
-
-  let [user, error] = await Handler(User.findByPk(id))
-
-  if (error) return res.status(500).json(error)
-
-  return res.status(200).json(user)
+exports.show = async (req, res) => {
+  const user = await findUser(req, res)
+  if (user) {
+    return res.status(200).json(user)
+  }
 }
 
 /**
@@ -59,54 +73,59 @@ exports.store = async function (req, res) {
 
 }
 
+/**
+ * Update a given user by params.id
+ *
+ * @method delete
+ * @param 
+ * @param data json
+ */
+exports.update = async function (req, res) {
+  const params = req.body
+  const errors = check_no_empty(params)
+  if (errors) return res.status(409).json(errors)
+
+  const user = await findUser(req, res)
+
+  // update the user model (no persistance)
+  for (let key of Object.keys(params)) {
+    if (params[key] !== undefined) {
+      user[key] = params[key]
+    }
+  }
+  // updated_at
+  user.updated_at = Date.now('yyyy-mm-dd hh:mm:ii')
+
+  // save the user
+  user.save()
+    .then((updatedUser) => res.status(200).json(updatedUser))
+    .catch((error) => {
+      const errors = []
+      error.errors.forEach(error => {
+        errors.push(error.message)
+      });
+      res.status(500).json(errors)
+    })
+}
+
+/**
+ * Delete a given user by params.id
+ *
+ * @method delete
+ * @param id Number         : id of the user to edit
+ * @param name String       : new name
+ * @param email String      : new email
+ * @param password String   : new password
+ */
 exports.delete = async function (req, res) {
 
-  const id = parseInt(req.body.id)
+  const id = parseInt(req.params.id)
 
-  let [user, error] = await Handler(User.findByPk(id))
-
-  if (error) return res.status(500).json({ error })
-
-  if (!user) return res.status(400).json({ error: `Can't find user with id ${id}` })
+  const user = await findUser(req, res);
 
   let deleted = await user.destroy()
 
   if (!deleted) return res.status(500).json({ error })
 
   return res.status(200).json(deleted)
-}
-
-
-exports.update = async function (req, res) {
-  const params = req.body
-  const id = req.params.id
-
-  // const errors = check_no_empty(params)
-  // if (errors) return res.status(409).json(errors)
-
-  let [user, errorInput] = await Handler(User.findByPk(id))
-
-  if (errorInput) return res.status(500).json(errorInput)
-  if (!user) return res.status(400).json({ error: `Can't find user with id ${id}` })
-
-  // update the user
-  for (let key of Object.keys(params)) {
-    if (params[key] !== undefined) {
-      user[key] = params[key]
-    }
-  }
-  user.updated_at = Date.now('yyyy-mm-dd hh:mm:ii')
-
-  user.save()
-    .then((updatedUser) => res.status(200).json(updatedUser))
-    .catch((error) => {
-      const errors = []
-
-      error.errors.forEach(error => {
-        errors.push(error.message)
-      });
-
-      res.status(200).json(errors)
-    })
-
 }
