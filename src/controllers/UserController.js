@@ -119,13 +119,17 @@ exports.update = async function (req, res) {
  */
 exports.delete = async function (req, res) {
 
-  const id = parseInt(req.params.id)
-
   const user = await findUser(req, res);
 
-  let deleted = await user.destroy()
+  const [deleted, error] = await Handler(user.destroy())
 
-  if (!deleted) return res.status(500).json({ error })
+  if (error) {
+    const errors = []
+    error.errors.forEach(error => {
+      errors.push(error.message)
+    });
+    res.status(500).json(errors)
+  }
 
-  return res.status(200).json(deleted)
+  res.status(200).json(deleted)
 }
