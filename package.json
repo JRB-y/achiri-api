@@ -1,0 +1,16 @@
+{
+  "name": "achiri-api",
+  "version": "0.0.1",
+  "description": "API for Achiri.tn",
+  "main": "src/server.js",
+  "scripts": {
+    "serve": "nodemon src/server.js"
+  },
+  "author": "Jrb <jrb.youssef@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "mysql2": "^2.1.0",
+    "sequelize": "^5.21.4"
+  }
+}
