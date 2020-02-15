@@ -1,4 +1,4 @@
-const sequelize = require('../db');
+const sequelize = require('../db')
 const { Sequelize, Model } = require('sequelize')
 
 class User extends Model { }
