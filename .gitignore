@@ -1,2 +1,9 @@
+# vscode
 .vscode
+.vs_code
+
+# node_modules
 node_modules
+
+# session storage
+sessions
