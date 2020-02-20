@@ -1,4 +1,4 @@
-const sequelize = require('../db');
+const sequelize = require('../db')
 const { Sequelize, Model } = require('sequelize')
 
 class User extends Model { }
@@ -30,6 +30,6 @@ User.init({
   uniqueKeys: {
     users_unique: { fields: ['email'] }
   }
-});
+})
 
 module.exports = User
