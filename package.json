@@ -1,6 +1,6 @@
 {
   "name": "achiri-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "API for Achiri.tn",
   "main": "src/server.js",
   "scripts": {
